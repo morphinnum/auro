@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DHTMLX Grid</title>
+    <script type="text/javascript" src="codebase/grid.js"></script>
+
+    <script type="text/javascript" src="data/data.js"></script>
+    <script type="text/javascript" src="data/columns.js"></script>
+
+    <link rel="stylesheet" href="codebase/grid.css">
+</head>
+<body>
+<div style="height:700px; width:1500px" id="grid_container"></div>
+<script>
+    let columnArr = new Array();
+    function fillColumns() {
+        columns.forEach(function (element){
+            columnArr.push({
+                width: element.width,
+                id: element.id,
+                header: element.header,
+                type: element.type,
+                dateFormat:"%d-%M-%Y",
+                align: element.align,
+                resizable: element.resizable,
+                editing: element.editing,
+                sortable: true
+            });
+        });
+    }
+    fillColumns();
+
+    const grid = new dhx.Grid("grid_container", {
+        columns: columnArr,
+        data: dataset,
+    });
+    let state;
+    document.querySelectorAll('[role="columnheader"]').forEach(function (el){
+        el.addEventListener("click", function () {
+            state = grid.getSortingState();
+            localStorage.setItem('gridState', JSON.stringify(state));
+        })
+    });
+    if ( localStorage.hasOwnProperty('gridState')) {
+        let loadState = JSON.parse(localStorage.getItem('gridState'));
+        grid.data.sort(loadState);
+    }
+
+</script>
+</body>
+</html>
